@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A practical field guide to AI-assisted software development with VS Code, Cursor, Antigravity, Codex, and modern AI models.">
+  <title>AI-assisted development, made legible</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+    :root {
+      --ink: #17252a;
+      --muted: #5b6867;
+      --paper: #f5f1e9;
+      --panel: #fffdf8;
+      --line: #d8d2c5;
+      --teal: #0e7773;
+      --teal-dark: #07534f;
+      --coral: #e7634f;
+      --yellow: #f3c762;
+      --blue: #a9d9d2;
+      --shadow: 0 18px 45px rgba(23, 37, 42, .08);
+      --display: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+      --body: 'DM Sans', 'Segoe UI', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font: 16px/1.65 var(--body); }
+    a { color: inherit; }
+    button { font: inherit; }
+    .site-shell { max-width: 1440px; margin: 0 auto; padding: 0 34px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 76px; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font: 700 15px var(--display); text-decoration: none; letter-spacing: .04em; text-transform: uppercase; }
+    .brand-mark { display: grid; width: 26px; height: 26px; place-items: center; color: var(--paper); background: var(--teal); border-radius: 50%; font-size: 12px; }
+    .topbar-note { color: var(--muted); font-size: 13px; }
+
+    .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 70px; align-items: end; padding: 96px 0 84px; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; color: var(--coral); font: 700 12px var(--display); letter-spacing: .13em; text-transform: uppercase; }
+    .eyebrow::before { content: ''; width: 30px; height: 3px; background: var(--coral); }
+    h1, h2, h3 { font-family: var(--display); letter-spacing: -.045em; line-height: 1.04; }
+    h1 { max-width: 850px; margin: 22px 0 25px; font-size: clamp(3.6rem, 8vw, 7.7rem); font-weight: 700; }
+    .hero-copy { max-width: 680px; margin: 0; color: var(--muted); font-size: 19px; }
+    .hero-aside { position: relative; padding: 28px; background: var(--teal); color: #eaf5ed; box-shadow: var(--shadow); }
+    .hero-aside::after { content: '↗'; position: absolute; right: 22px; top: 14px; color: var(--yellow); font-size: 44px; }
+    .hero-aside p { margin: 0; font: 600 22px/1.25 var(--display); }
+    .hero-aside small { display: block; margin-top: 30px; color: #b6ded6; font-size: 13px; }
+
+    .layout { display: grid; grid-template-columns: 185px minmax(0, 1fr); gap: 55px; padding-bottom: 100px; }
+    .rail { position: sticky; top: 24px; align-self: start; }
+    .rail-label { margin-bottom: 17px; color: var(--muted); font: 700 11px var(--display); letter-spacing: .12em; text-transform: uppercase; }
+    .rail a { display: block; padding: 8px 0; color: var(--muted); text-decoration: none; font-size: 13px; border-bottom: 1px solid transparent; }
+    .rail a:hover, .rail a:focus { color: var(--teal); border-bottom-color: var(--teal); }
+    .rail .version { margin-top: 30px; color: var(--muted); font-size: 11px; }
+    .section { padding: 18px 0 82px; scroll-margin-top: 22px; }
+    .section + .section { border-top: 1px solid var(--line); }
+    .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-bottom: 28px; }
+    .section-kicker { color: var(--coral); font: 700 12px var(--display); letter-spacing: .1em; text-transform: uppercase; }
+    h2 { margin: 7px 0 0; font-size: clamp(2.1rem, 4vw, 4.1rem); }
+    h3 { margin: 0 0 14px; font-size: 25px; letter-spacing: -.03em; }
+    .section-intro { max-width: 610px; margin: 0 0 31px; color: var(--muted); font-size: 17px; }
+
+    .principle { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; align-items: stretch; }
+    .principle-quote { display: flex; align-items: end; min-height: 275px; padding: 31px; background: var(--yellow); }
+    .principle-quote p { max-width: 650px; margin: 0; font: 700 clamp(1.8rem, 3vw, 3rem)/1.05 var(--display); }
+    .layer-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .layer { padding: 19px; background: var(--panel); }
+    .layer strong { display: block; margin-bottom: 4px; font-family: var(--display); }
+    .layer span { color: var(--muted); font-size: 13px; }
+
+    .comparison { overflow-x: auto; border: 1px solid var(--line); background: var(--panel); }
+    table { width: 100%; min-width: 720px; border-collapse: collapse; text-align: left; }
+    th { padding: 18px; background: var(--teal-dark); color: #eef8ee; font: 600 13px var(--display); letter-spacing: .03em; }
+    td { padding: 20px 18px; vertical-align: top; border-bottom: 1px solid var(--line); }
+    tr:last-child td { border-bottom: 0; }
+    td:first-child { width: 19%; font: 700 17px var(--display); }
+    td:not(:first-child) { color: var(--muted); font-size: 14px; }
+
+    .tool-grid, .model-grid, .trend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 17px; }
+    .tool-card, .model-card, .trend-card { min-height: 220px; padding: 27px; border: 1px solid var(--line); background: var(--panel); }
+    .tool-card:nth-child(2) { background: #e4f0e9; }
+    .tool-card:nth-child(3) { background: #f7e1d6; }
+    .tool-card:nth-child(4) { background: #dae9ec; }
+    .card-number { display: block; margin-bottom: 38px; color: var(--coral); font: 700 12px var(--display); }
+    .tool-card p, .model-card p, .trend-card p { margin: 0; color: var(--muted); }
+    .model-card { min-height: 200px; }
+    .model-card strong { display: block; margin-bottom: 10px; color: var(--teal-dark); font: 700 18px var(--display); }
+    .model-card .use { display: inline-block; margin-top: 18px; padding: 4px 8px; color: var(--ink); background: var(--blue); font-size: 12px; }
+
+    .chooser { display: grid; grid-template-columns: .75fr 1.25fr; gap: 30px; padding: 32px; background: var(--ink); color: #f5f1e9; }
+    .chooser h3 { font-size: 31px; }
+    .chooser p { color: #b7c7c2; }
+    .priority-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 25px; }
+    .priority-controls button { cursor: pointer; padding: 9px 12px; color: #d7e8e1; border: 1px solid #617572; background: transparent; border-radius: 2px; }
+    .priority-controls button:hover, .priority-controls button[aria-pressed="true"] { color: var(--ink); border-color: var(--yellow); background: var(--yellow); }
+    .recommendation { display: flex; flex-direction: column; justify-content: space-between; min-height: 260px; padding: 27px; color: var(--ink); background: var(--yellow); }
+    .recommendation .label { color: var(--teal-dark); font: 700 11px var(--display); letter-spacing: .12em; text-transform: uppercase; }
+    .recommendation h3 { margin: 14px 0 10px; font-size: 36px; }
+    .recommendation p { max-width: 620px; margin: 0; color: #3d4c49; }
+    .recommendation .route { margin-top: 24px; color: var(--teal-dark); font: 600 14px var(--display); }
+
+    .workflow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border: 1px solid var(--line); background: var(--line); }
+    .step { min-height: 185px; padding: 25px; background: var(--panel); }
+    .step strong { display: block; margin-bottom: 22px; color: var(--teal); font: 700 29px var(--display); }
+    .step h3 { font-size: 20px; }
+    .step p { margin: 0; color: var(--muted); font-size: 14px; }
+    .wide-note { margin-top: 18px; padding: 18px 20px; border-left: 4px solid var(--coral); color: var(--muted); background: #f9dfd1; }
+
+    .footer { display: flex; justify-content: space-between; gap: 30px; padding: 35px 0 52px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    .footer strong { color: var(--ink); font-family: var(--display); }
+    .back-top { color: var(--teal); text-decoration: none; font-weight: 700; }
+    @media (max-width: 850px) {
+      .site-shell { padding: 0 19px; }
+      .hero { grid-template-columns: 1fr; gap: 30px; padding: 65px 0 60px; }
+      .hero-aside { max-width: 540px; }
+      .layout { display: block; }
+      .rail { position: static; display: flex; align-items: center; gap: 16px; overflow-x: auto; margin-bottom: 42px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+      .rail-label, .rail .version { display: none; }
+      .rail a { flex: 0 0 auto; padding: 4px 0; }
+      .principle, .chooser { grid-template-columns: 1fr; }
+      .tool-grid, .model-grid, .trend-grid { grid-template-columns: 1fr; }
+      .workflow { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      h1 { font-size: 3.45rem; }
+      .topbar-note { display: none; }
+      .layer-list { grid-template-columns: 1fr; }
+      .principle-quote { min-height: 220px; }
+      .chooser { padding: 22px; }
+      .footer { display: block; }
+      .footer .back-top { display: block; margin-top: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-shell topbar">
+    <a class="brand" href="#top"><span class="brand-mark">AI</span> Development field guide</a>
+    <span class="topbar-note">A practical guide for the 2026 tool curve</span>
+  </header>
+
+  <main id="top" class="site-shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">A working brief for builders</div>
+        <h1>AI-assisted development, made legible.</h1>
+        <p class="hero-copy">How to combine editors, agents, and models without mistaking generated code for finished software.</p>
+      </div>
+      <aside class="hero-aside">
+        <p>Productivity is not the fastest patch. It is the shortest route to a correct, reviewable patch.</p>
+        <small>VS Code · Cursor · Antigravity · Codex</small>
+      </aside>
+    </section>
+
+    <div class="layout">
+      <nav class="rail" aria-label="Page sections">
+        <span class="rail-label">On this page</span>
+        <a href="#layers">01 / Layers</a>
+        <a href="#compare">02 / Compare</a>
+        <a href="#models">03 / Models</a>
+        <a href="#chooser">04 / Choose</a>
+        <a href="#workflow">05 / Loop</a>
+        <a href="#trends">06 / Trends</a>
+        <span class="version">Reviewed September 2026</span>
+      </nav>
+
+      <div>
+        <section id="layers" class="section">
+          <div class="section-heading"><div><div class="section-kicker">01 / The central idea</div><h2>Tools are layers.</h2></div></div>
+          <div class="principle">
+            <div class="principle-quote"><p>Keep the editor, agent, model, context, and verification loop distinct. That is where good decisions become visible.</p></div>
+            <div class="layer-list">
+              <div class="layer"><strong>Editor / IDE</strong><span>Files, debugging, extensions, terminal</span></div>
+              <div class="layer"><strong>Agent</strong><span>Plans, edits, commands, iteration</span></div>
+              <div class="layer"><strong>Model</strong><span>Reasoning, speed, code, vision</span></div>
+              <div class="layer"><strong>Context</strong><span>Repository, tests, docs, issues</span></div>
+              <div class="layer"><strong>Verification</strong><span>Tests, lint, builds, review</span></div>
+              <div class="layer"><strong>Loop</strong><span>Specify → inspect → ship</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="compare" class="section">
+          <div class="section-heading"><div><div class="section-kicker">02 / The short version</div><h2>Which surface fits?</h2></div></div>
+          <p class="section-intro">There is no universal winner. “Fast” means reducing total cycle time while preserving correctness.</p>
+          <div class="comparison">
+            <table>
+              <thead><tr><th>Option</th><th>Best fit</th><th>Strength</th><th>Trade-off</th></tr></thead>
+              <tbody>
+                <tr><td>VS Code</td><td>Teams that want choice and control</td><td>Mature editor, debugging, remote development, broad extension ecosystem</td><td>AI experience depends on the chosen extension and setup</td></tr>
+                <tr><td>Cursor</td><td>Individual AI-first development</td><td>Fast repository chat, inline edits, agent workflows</td><td>Features and pricing change; governance needs intent</td></tr>
+                <tr><td>Antigravity</td><td>Agent-centered experimentation</td><td>Potentially strong multi-step task execution</td><td>Verify maturity, support, permissions, and controls</td></tr>
+                <tr><td>Codex</td><td>Delegated repository tasks</td><td>Repeatable issue-to-patch workflows across supported surfaces</td><td>Needs precise boundaries and careful review</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="tools" class="section">
+          <div class="section-heading"><div><div class="section-kicker">03 / Use the surface well</div><h2>Four different instincts.</h2></div></div>
+          <div class="tool-grid">
+            <article class="tool-card"><span class="card-number">01 / VS CODE</span><h3>Compose your workbench.</h3><p>Use it when debugging, remote development, extension choice, and team control matter more than a single AI experience.</p></article>
+            <article class="tool-card"><span class="card-number">02 / CURSOR</span><h3>Talk to the codebase.</h3><p>Start with repository questions, ask for a plan, then keep edits narrow and inspect every generated diff.</p></article>
+            <article class="tool-card"><span class="card-number">03 / ANTIGRAVITY</span><h3>Test the agent boundary.</h3><p>Benchmark it on a real bug, a multi-file feature, and a rejected command before making it a team default.</p></article>
+            <article class="tool-card"><span class="card-number">04 / CODEX</span><h3>Delegate a contract.</h3><p>Give the task a goal, repository facts, constraints, acceptance criteria, and a verification command.</p></article>
+          </div>
+        </section>
+
+        <section id="models" class="section">
+          <div class="section-heading"><div><div class="section-kicker">04 / Match the job</div><h2>Route by capability.</h2></div></div>
+          <p class="section-intro">Model names move quickly. Choose by capability, then benchmark against your own codebase.</p>
+          <div class="model-grid">
+            <article class="model-card"><strong>Fast coding model</strong><p>Autocomplete, syntax, boilerplate, small transformations.</p><span class="use">Low latency</span></article>
+            <article class="model-card"><strong>Reasoning model</strong><p>Debugging, design trade-offs, concurrency, security, unfamiliar code.</p><span class="use">High judgment</span></article>
+            <article class="model-card"><strong>Long-context model</strong><p>Large repositories, specifications, logs, and migration planning.</p><span class="use">Wide context</span></article>
+            <article class="model-card"><strong>Tool-using agent</strong><p>Multi-step edits, terminal workflows, tests, and bounded iteration.</p><span class="use">Action oriented</span></article>
+          </div>
+        </section>
+
+        <section id="chooser" class="section">
+          <div class="section-heading"><div><div class="section-kicker">05 / A useful default</div><h2>Choose your bottleneck.</h2></div></div>
+          <div class="chooser">
+            <div>
+              <h3>What matters most right now?</h3>
+              <p>Select a priority. The recommendation is intentionally practical, not a leaderboard.</p>
+              <div class="priority-controls" role="group" aria-label="Choose a development priority">
+                <button type="button" data-priority="team" aria-pressed="true">Team control</button>
+                <button type="button" data-priority="speed" aria-pressed="false">Individual speed</button>
+                <button type="button" data-priority="delegation" aria-pressed="false">Task delegation</button>
+                <button type="button" data-priority="experiment" aria-pressed="false">Agentic experiment</button>
+              </div>
+            </div>
+            <div class="recommendation" aria-live="polite">
+              <div><span class="label">Recommended route</span><h3 id="recommendation-title">VS Code + one AI assistant</h3><p id="recommendation-copy">A balanced default: stable editing, debugging, remote development, and the freedom to change providers without changing the whole environment.</p></div>
+              <div class="route" id="recommendation-route">Add Codex for bounded repository tasks.</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="workflow" class="section">
+          <div class="section-heading"><div><div class="section-kicker">06 / The loop</div><h2>Make verification part of the prompt.</h2></div></div>
+          <div class="workflow">
+            <article class="step"><strong>01</strong><h3>Define the outcome</h3><p>Write inputs, outputs, constraints, failure behavior, and non-goals.</p></article>
+            <article class="step"><strong>02</strong><h3>Establish context</h3><p>Give the tool the relevant files, runtime, conventions, and existing tests.</p></article>
+            <article class="step"><strong>03</strong><h3>Request a plan</h3><p>Ask for the owning path, proposed files, risks, and validation commands.</p></article>
+            <article class="step"><strong>04</strong><h3>Implement in slices</h3><p>Prefer a vertical slice that can be tested over a large rewrite.</p></article>
+            <article class="step"><strong>05</strong><h3>Verify independently</h3><p>Run tests, type checks, lint, builds, and security scans where needed.</p></article>
+            <article class="step"><strong>06</strong><h3>Review what tests miss</h3><p>Check authorization, data exposure, performance, compatibility, and accessibility.</p></article>
+          </div>
+          <div class="wide-note"><strong>Human checkpoint:</strong> require approval before package changes, destructive commands, infrastructure work, secret access, migrations, billing, or permission changes.</div>
+        </section>
+
+        <section id="trends" class="section">
+          <div class="section-heading"><div><div class="section-kicker">07 / Stay current</div><h2>Track the curve, not the hype.</h2></div></div>
+          <p class="section-intro">Keep a small evaluation harness and re-run it when a new editor, model, or extension claims to change your workflow.</p>
+          <div class="trend-grid">
+            <article class="trend-card"><h3>Follow primary sources.</h3><p>Read official release notes, model docs, pricing, retention policies, and security advisories first.</p></article>
+            <article class="trend-card"><h3>Keep 10–20 real tasks.</h3><p>Use representative bugs, features, refactors, security reviews, UI tasks, and legacy-code questions.</p></article>
+            <article class="trend-card"><h3>Measure verified delivery.</h3><p>Track correctness, review effort, total cycle time, cost, retries, and reopened bugs.</p></article>
+            <article class="trend-card"><h3>Keep a rollback path.</h3><p>Document alternatives, pin where sensible, and keep repository commands independent of one assistant.</p></article>
+          </div>
+        </section>
+
+        <footer class="footer"><div><strong>The durable advantage</strong><br>Precise context, capable models, clear boundaries, and evidence.</div><a class="back-top" href="#top">Back to top ↑</a></footer>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const recommendations = {
+      team: {
+        title: 'VS Code + one AI assistant',
+        copy: 'A balanced default: stable editing, debugging, remote development, and the freedom to change providers without changing the whole environment.',
+        route: 'Add Codex for bounded repository tasks.'
+      },
+      speed: {
+        title: 'Cursor for the daily loop',
+        copy: 'An AI-first editor is often the quickest path for repository questions, inline transformations, and focused multi-file changes.',
+        route: 'Keep a stronger reasoning model for hard debugging.'
+      },
+      delegation: {
+        title: 'Codex with explicit contracts',
+        copy: 'Delegate issues that have a clear goal, constrained file scope, acceptance criteria, and a command that proves the result.',
+        route: 'Review the diff and command log before merging.'
+      },
+      experiment: {
+        title: 'Benchmark Antigravity first',
+        copy: 'An agent-centered workspace may unlock new flows, but evaluate support, permissions, data handling, and interruption behavior on real work.',
+        route: 'Do not standardize until the benchmark beats your baseline.'
+      }
+    };
+
+    document.querySelectorAll('[data-priority]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[data-priority]').forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        const recommendation = recommendations[button.dataset.priority];
+        document.querySelector('#recommendation-title').textContent = recommendation.title;
+        document.querySelector('#recommendation-copy').textContent = recommendation.copy;
+        document.querySelector('#recommendation-route').textContent = recommendation.route;
+      });
+    });
+  </script>
+</body>
+</html>
